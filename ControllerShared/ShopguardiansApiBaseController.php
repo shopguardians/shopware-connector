@@ -67,6 +67,7 @@ class ShopguardiansApiBaseController extends Enlight_Controller_Action
         header("Access-Control-Allow-Headers: x-api-key,Content-Type");
         header('Content-Type:application/json;charset=utf-8');
         echo json_encode($bodyToRender);
+        die();
     }
 
     public function setNoRender()
