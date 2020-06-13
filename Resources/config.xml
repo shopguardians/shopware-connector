@@ -29,8 +29,8 @@
         </element>
         <element required="true" type="text">
             <name>shoguardiansOhsAlertMinutesSafetyBufferFactor</name>
-            <label lang="de">Zu berücksichtigender Zeitraum von Tagen für Bestellintervalle</label>
-            <label lang="en">Days range to consider for order intervals</label>
+            <label lang="de">Sensivität Checkout-Monitoring (1-10)</label>
+            <label lang="en">Checkout monitoring sensivity</label>
         </element>
     </elements>
 </config>
