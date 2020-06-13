@@ -124,5 +124,16 @@ class PaginationData
         return (int) ceil($totalCount / $perPage);
     }
 
+    /**
+     * @param \Doctrine\ORM\Tools\Pagination\Paginator $paginator
+     */
+    public function setFromPaginator($paginator)
+    {
+        $this->setTotalCount($paginator->count());
+        $this->setPagesCount(
+            (int)ceil($this->getTotalCount() / $this->getPerPage())
+        );
+    }
+
 
 }

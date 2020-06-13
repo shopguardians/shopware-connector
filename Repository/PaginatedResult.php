@@ -24,19 +24,13 @@ class PaginatedResult
     public static function get($paginationData, $query)
     {
         $paginator = new Paginator($query);
-        $totalCount = $paginator->count();
-        $pagesCount = (int)ceil($totalCount / $paginationData->getPerPage());
-
+        $paginationData->setFromPaginator($paginator);
         $paginator->getQuery()
             ->setFirstResult($paginationData->getOffset())
             ->setMaxResults($paginationData->getPerPage());
-
         return [
+            'pagination' => $paginationData->getData(),
             'result' => iterator_to_array($paginator),
-            'page' => $paginationData->getPage(),
-            'perPage' => $paginationData->getPerPage(),
-            'totalCount' => $totalCount,
-            'pagesCount' => $pagesCount,
         ];
     }
 

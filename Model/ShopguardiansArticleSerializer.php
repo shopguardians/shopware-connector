@@ -9,7 +9,7 @@
 namespace Shopguardians\Model;
 
 
-use Shopguardians\Shared\ArticleUrlUtils;
+use Shopguardians\Shared\LinkingUtils;
 
 class ShopguardiansArticleSerializer
 {
@@ -33,15 +33,17 @@ class ShopguardiansArticleSerializer
      */
     public static function fromArrayHydratedDetail($detail = [])
     {
+
         return [
             'artnum' => $detail['number'] ?? null,
             'parent_id' => $detail['articleId'] ?? null,
             'product_uid' => $detail['id'] ?? null,
             'stock' => $detail['inStock'] ?? null,
-            'thumb' => $detail['article']['images'][0]['media'] ?? null,
+            'thumb' => LinkingUtils::getLinkToIMageFromArrayHydratedDetail($detail),
             'title' => $detail['article']['name'] ?? null,
-            'url' => ArticleUrlUtils::getArticleUrlFromArrayHydratedDetail($detail),
+            'url' => LinkingUtils::getArticleUrlFromArrayHydratedDetail($detail),
         ];
     }
+
 
 }
