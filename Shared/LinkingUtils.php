@@ -14,7 +14,7 @@ class LinkingUtils
 
     public static function getArticleUrlFromArrayHydratedDetail($detail)
     {
-        return self::getSchemeAndHostPart() . "/detail/index/sArticle/" . $detail['id'] ?? null;
+        return self::getSchemeAndHostPart() . "/detail/index/sArticle/" . $detail['articleId'] ?? null;
     }
 
     public static function getSchemeAndHostPart()
