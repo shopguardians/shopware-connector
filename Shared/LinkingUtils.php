@@ -34,7 +34,7 @@ class LinkingUtils
         if (!$imagePath) {
             return null;
         }
-        $imagePath = ltrim('/');
+        $imagePath = ltrim($imagePath, '/');
         $imagePath = '/' . $imagePath;
         return self::getSchemeAndHostPart() . $imagePath;
     }
