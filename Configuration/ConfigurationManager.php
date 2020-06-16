@@ -8,6 +8,8 @@
 
 namespace Shopguardians\Configuration;
 
+use Shopguardians\Shared\ApiTokenGenerator;
+
 class ConfigurationManager
 {
 
@@ -64,6 +66,24 @@ class ConfigurationManager
     {
         return self::getUnscopedConfigParam('shoguardiansOhsAlertMinutesSafetyBufferFactor')
                     ?? 3;
+    }
+
+    public static function setUnscopedConfgiParam($key, $value)
+    {
+        $shop = Shopware()->Models()->getRepository('Shopware\Models\Shop\Shop')->findOneBy(['default' => true]);
+        $pluginManager  = Shopware()->Container()->get('shopware.plugin_Manager');
+        $plugin = $pluginManager->getPluginByName(self::getPluginName());
+        $pluginManager->saveConfigElement($plugin, $key, $value, $shop);
+    }
+
+    public static function generateAndSetApiKey()
+    {
+        $existingApiKey = self::getApiKey();
+        if ($existingApiKey) {
+            return;
+        }
+        $apiKey = ApiTokenGenerator::generateToken();
+        self::setUnscopedConfgiParam('shoguardiansApiKey', $apiKey);
     }
 
 }

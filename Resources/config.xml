@@ -6,12 +6,30 @@
             <name>shoguardiansApiKey</name>
             <label lang="de">Shopguardians Api Key</label>
             <label lang="en">Shopguardians Api key</label>
+            <description lang="de">
+                Diesen automatisch generierten Schlüssel musst du kopieren und einmalig bei Shopguardians hinterlegen,
+                damit die Verbindung zu deinem Shop steht.
+            </description>
+            <description lang="en">
+                Diesen automatisch generierten Schlüssel musst du kopieren und einmalig bei Shopguardians hinterlegen,
+                damit die Verbindung zu deinem Shop steht.
+            </description>
         </element>
         <element required="true" type="text">
             <name>shoguardiansOhsWorkingHourTresholdPercent</name>
-            <label lang="de">Schwellenwert für die Arbeitszeit in Prozent</label>
+            <label lang="de">Verkaufszeiten Standardabweichung Grenzwert %</label>
             <label lang="en">Working hours threshold percent</label>
             <value>50</value>
+            <description lang="de">
+                Shopguardians ermittelt die typischen Verkaufszeiten in deinem Shop. Diese Experteneinstellung bestimmt
+                die maximale Abweichung zum Mittelwert, um eine Stunde aus der Überwachung auszuschließen.
+                Hier musst du i.d.R. nichts ändern.
+            </description>
+            <description lang="en">
+                Shopguardians ermittelt die typischen Verkaufszeiten in deinem Shop. Diese Experteneinstellung bestimmt
+                die maximale Abweichung zum Mittelwert, um eine Stunde aus der Überwachung auszuschließen.
+                Hier musst du i.d.R. nichts ändern.
+            </description>
         </element>
         <element required="true" type="text">
             <name>shoguardiansOhsPaymentMethodActivitySpan</name>
@@ -27,15 +45,37 @@
         </element>
         <element required="true" type="text">
             <name>shoguardiansOhsDaysBackToCountOrderIntervals</name>
-            <label lang="de">Zu berücksichtigender Zeitraum von Tagen für Bestellintervalle</label>
+            <label lang="de">Limit Tage für Zahlart-Aktivität</label>
             <label lang="en">Days range to consider for order intervals</label>
             <value>60</value>
+            <description lang="de">
+                Mit einer Zahlart muss mindestens vor dieser Anzahl Tagen bestellt worden sein,
+                um die Zahlart für das Checkout-Monitoring zu aktivieren. Dies verhindert, dass du
+                Meldungen über nicht mehr genutzte Zahlarten bekommst.
+            </description>
+            <description lang="en">
+                Mit einer Zahlart muss mindestens vor dieser Anzahl Tagen bestellt worden sein,
+                um die Zahlart für das Checkout-Monitoring zu aktivieren. Dies verhindert, dass du
+                Meldungen über nicht mehr genutzte Zahlarten bekommst.
+            </description>
         </element>
         <element required="true" type="text">
             <name>shoguardiansOhsAlertMinutesSafetyBufferFactor</name>
-            <label lang="de">Sensivität Checkout-Monitoring (1-10)</label>
+            <label lang="de">
+                Sensivität Checkout-Monitoring (1-10)
+            </label>
             <label lang="en">Checkout monitoring sensivity</label>
             <value>5</value>
+            <description lang="de">
+                Faktor, mit der die durchschnittliche Distanz zwischen Bestellungen multipliziert wird.
+                Erhöhe diesen Faktor, wenn du Fehlalarme bekommst, verringere ihn für frühere Alarme.
+                (Höchste Sensivität: 1, Maximal: 10)
+            </description>
+            <description lang="en">
+                Faktor, mit der die durchschnittliche Distanz zwischen Bestellungen multipliziert wird.
+                Erhöhe diesen Faktor, wenn du Fehlalarme bekommst, verringere ihn für frühere Alarme.
+                (Höchste Sensivität: 1, Maximal: 10)
+            </description>
         </element>
     </elements>
 </config>
