@@ -11,26 +11,31 @@
             <name>shoguardiansOhsWorkingHourTresholdPercent</name>
             <label lang="de">Schwellenwert für die Arbeitszeit in Prozent</label>
             <label lang="en">Working hours threshold percent</label>
+            <value>50</value>
         </element>
         <element required="true" type="text">
             <name>shoguardiansOhsPaymentMethodActivitySpan</name>
             <label lang="de">Zahlungsart Aktivitätsspanne</label>
             <label lang="en">Payment method activity span</label>
+            <value>120</value>
         </element>
         <element required="true" type="text">
             <name>shoguardiansOhsAverageOrderDistanceFallback</name>
             <label lang="de">Bestellintervall-Fallback</label>
             <label lang="en">Payment method interval fallback</label>
+            <value>120</value>
         </element>
         <element required="true" type="text">
             <name>shoguardiansOhsDaysBackToCountOrderIntervals</name>
             <label lang="de">Zu berücksichtigender Zeitraum von Tagen für Bestellintervalle</label>
             <label lang="en">Days range to consider for order intervals</label>
+            <value>60</value>
         </element>
         <element required="true" type="text">
             <name>shoguardiansOhsAlertMinutesSafetyBufferFactor</name>
             <label lang="de">Sensivität Checkout-Monitoring (1-10)</label>
             <label lang="en">Checkout monitoring sensivity</label>
+            <value>5</value>
         </element>
     </elements>
 </config>
