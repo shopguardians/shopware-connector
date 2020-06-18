@@ -28,6 +28,7 @@ class PaginatedResult
         $paginator->getQuery()
             ->setFirstResult($paginationData->getOffset())
             ->setMaxResults($paginationData->getPerPage());
+
         return [
             'pagination' => $paginationData->getData(),
             'result' => iterator_to_array($paginator),

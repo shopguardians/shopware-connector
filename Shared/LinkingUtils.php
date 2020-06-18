@@ -9,6 +9,9 @@
 namespace Shopguardians\Shared;
 
 
+use Shopguardians\Media\MediaUtils;
+use Shopware\Models\Article\Article;
+
 class LinkingUtils
 {
 
@@ -19,8 +22,9 @@ class LinkingUtils
 
     public static function getSchemeAndHostPart()
     {
-        $scheme = $_SERVER['REQUEST_SCHEME'] ?? 'https';
-        $host = $_SERVER['HTTP_HOST'];
+        $shop = Shopware()->Shop();
+        $scheme = $shop->getSecure() ? 'https' : 'http';
+        $host = $shop->getHost();
         return $scheme . "://" . $host;
     }
 
@@ -30,13 +34,32 @@ class LinkingUtils
      */
     public static function getLinkToIMageFromArrayHydratedDetail($detail)
     {
-        $imagePath = $detail['article']['images'][0]['media']['path'] ?? null;
-        if (!$imagePath) {
+        $mediaId = $detail['article']['images'][0]['mediaId'] ?? null;
+        $imagePath = null;
+        if (!$mediaId) {
             return null;
         }
-        $imagePath = ltrim($imagePath, '/');
-        $imagePath = '/' . $imagePath;
-        return self::getSchemeAndHostPart() . $imagePath;
+        return self::getThumbnailOrDefaultPath($mediaId);
+    }
+
+    public static function getThumbnailOrDefaultPath($mediaId)
+    {
+        $context = Shopware()->Container()->get('shopware_storefront.context_service')->getShopContext();
+        $media = Shopware()->Container()->get('shopware_storefront.media_service')->get($mediaId, $context);
+        if (!$media) {
+            return null;
+        }
+        $mediaData = Shopware()->Container()->get('legacy_struct_converter')->convertMediaStruct($media);
+        if (!$mediaData) {
+            return null;
+        }
+        $pathToReturn = $mediaData['source'] ?? null;
+        $pathToReturn = MediaUtils::getImageUrlForSizeFromThumbnails(
+            $mediaData['thumbnails'] ?? [],
+            "200",
+            "200"
+        ) ?? $pathToReturn;
+        return $pathToReturn;
     }
 
 }
