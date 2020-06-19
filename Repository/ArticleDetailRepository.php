@@ -13,6 +13,7 @@ use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query;
 use Shopguardians\ControllerShared\PaginationData;
 use Shopguardians\Model\ShopguardiansArticleSerializer;
+use Shopware\Components\Model\QueryBuilder;
 use Shopware\Models\Article\Detail;
 
 class ArticleDetailRepository extends AbstractBaseRepository
@@ -41,18 +42,77 @@ class ArticleDetailRepository extends AbstractBaseRepository
         return $paginationResult;
     }
 
-    public function getWithoutStockQueryBuilder()
+    /**
+     * @param $queryBuilder \Doctrine\ORM\QueryBuilder
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function addJoinWithCurrentShopCategory($queryBuilder)
     {
-        return $this->getQueryBuilder()
-            ->select('detail', 'article')
+        return $queryBuilder
+            ->join('article.allCategories', 'allCategories')
+            ->where('allCategories.id = :shopCategoryId')
+            ->setParameter('shopCategoryId', Shopware()->Shop()->getCategory()->getId());
+    }
+
+    /**
+     * @param $queryBuilder \Doctrine\ORM\QueryBuilder
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function addDefaultSelectAndJoins($queryBuilder)
+    {
+        return $queryBuilder->select('detail')
             ->from(Detail::class, 'detail')
             ->join('detail.article', 'article')
+            ->addSelect('article');
+    }
+
+    /**
+     * @param $queryBuilder \Doctrine\ORM\QueryBuilder
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function addWhereOnlyActive($queryBuilder)
+    {
+        return $queryBuilder
+            ->andWhere('article.active = 1')
+            ->andWhere('detail.active = 1');
+    }
+
+    /**
+     * @param $queryBuilder \Doctrine\ORM\QueryBuilder
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function addJoinAndSelectImages($queryBuilder)
+    {
+        return $queryBuilder
             ->addSelect('images')
-            ->leftJoin('article.images', 'images')
-            ->addSelect('media')
-            ->leftJoin('images.media', 'media')
-            ->where('article.active = 1')
-            ->andwhere('detail.active = 1')
+            ->leftJoin('article.images', 'images');
+    }
+
+    /**
+     * @param bool[] || null $options
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function getDefaultQueryBuilder(
+        $options = [
+            'currentShopOnly' => true, 'onlyActive' => true
+        ]
+    )
+    {
+        $qb = $this->getQueryBuilder();
+        $qb = $this->addDefaultSelectAndJoins($qb);
+        if ($options['currentShopOnly'] ?? true) {
+            $qb = $this->addJoinWithCurrentShopCategory($qb);
+        }
+        $qb = $this->addJoinAndSelectImages($qb);
+        if ($options['onlyActive'] ?? true) {
+            $qb = $this->addWhereOnlyActive($qb);
+        }
+        return $qb;
+    }
+
+    public function getWithoutStockQueryBuilder()
+    {
+        return $this->getDefaultQueryBuilder()
             ->andWhere('detail.inStock < 1');
     }
 
@@ -68,13 +128,7 @@ class ArticleDetailRepository extends AbstractBaseRepository
 
     public function getWithoutImagesQueryBuilder()
     {
-        return $this->getQueryBuilder()
-            ->select('detail')
-            ->from(Detail::class, 'detail')
-            ->join('detail.article', 'article')
-            ->addSelect('article')
-            ->leftJoin('article.images', 'images')
-            ->where('article.active = 1')
+        return $this->getDefaultQueryBuilder()
             ->andWhere('images.id is null');
     }
 
@@ -90,22 +144,13 @@ class ArticleDetailRepository extends AbstractBaseRepository
 
     public function getWithoutDescriptionQueryBuilder()
     {
-        $qb =  $this->getQueryBuilder();
-        return $qb->select('detail', 'article')
-            ->from(Detail::class, 'detail')
-            ->addSelect('article')
-            ->join('detail.article', 'article')
-            ->addSelect('images')
-            ->leftJoin('article.images', 'images')
-            ->addSelect('media')
-            ->leftJoin('images.media', 'media')
-            ->where('article.active = 1')
-            ->andWhere(
-                $qb->expr()->orX(
-                    $qb->expr()->isNull('article.descriptionLong'),
-                    $qb->expr()->eq('article.descriptionLong', "''")
-                )
-            );
+        $qb = $this->getDefaultQueryBuilder();
+        return $qb->andWhere(
+            $qb->expr()->orX(
+                $qb->expr()->isNull('article.descriptionLong'),
+                $qb->expr()->eq('article.descriptionLong', "''")
+            )
+        );
     }
 
     /**
@@ -120,17 +165,9 @@ class ArticleDetailRepository extends AbstractBaseRepository
 
     public function getWithoutCategoriesQueryBuilder()
     {
-        $qb =  $this->getQueryBuilder();
-        return $qb->select('detail')
-            ->from(Detail::class, 'detail')
-            ->addSelect('article')
-            ->join('detail.article', 'article')
-            ->addSelect('images')
-            ->leftJoin('article.images', 'images')
+        $qb =  $this->getDefaultQueryBuilder(['currentShopOnly' => false]);
+        return $qb
             ->leftJoin('article.categories', 'categories')
-            ->addSelect('media')
-            ->leftJoin('images.media', 'media')
-            ->where('article.active = 1')
             ->andWhere('categories.id is null');
     }
 

@@ -17,15 +17,24 @@ class LinkingUtils
 
     public static function getArticleUrlFromArrayHydratedDetail($detail)
     {
-        return self::getSchemeAndHostPart() . "/detail/index/sArticle/" . $detail['articleId'] ?? null;
+        return self::getShopBaseUrl() . "/detail/index/sArticle/" . $detail['articleId'] ?? null;
     }
 
-    public static function getSchemeAndHostPart()
+    public static function getShopBaseUrl()
     {
+        $result = null;
         $shop = Shopware()->Shop();
         $scheme = $shop->getSecure() ? 'https' : 'http';
         $host = $shop->getHost();
-        return $scheme . "://" . $host;
+        $baseUrl = $shop->getBaseUrl();
+        $result = $scheme . "://" . $host;
+        $result = rtrim($result, '/');
+        if ($baseUrl) {
+            $baseUrl = '/' . ltrim($baseUrl, '/');
+            $baseUrl = rtrim($baseUrl, '/');
+            $result = $result . $baseUrl;
+        }
+        return $result;
     }
 
     /**
