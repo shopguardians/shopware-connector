@@ -26,7 +26,10 @@ abstract class AbstractBaseRepository
         $this->entityManager = Shopware()->Models();
     }
 
-    public function getConnection(): Connection
+    /**
+     * @return Connection
+     */
+    public function getConnection()
     {
         return $this->entityManager->getConnection();
     }

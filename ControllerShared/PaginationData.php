@@ -44,7 +44,7 @@ class PaginationData
     /**
      * @param Integer|null $page
      */
-    public function setPage($page): void
+    public function setPage($page)
     {
         $this->data['page'] = $page;
     }
@@ -68,7 +68,7 @@ class PaginationData
     /**
      * @param Integer|null $perPage
      */
-    public function setPerPage($perPage): void
+    public function setPerPage($perPage)
     {
         $this->data['perPage'] = $perPage;
     }
@@ -113,7 +113,7 @@ class PaginationData
     /**
      * @param int|null $totalCount
      */
-    public function setTotalCount($totalCount): void
+    public function setTotalCount($totalCount)
     {
         $this->totalCount = $totalCount;
     }
